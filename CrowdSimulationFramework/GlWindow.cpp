@@ -15,11 +15,13 @@
 	GlWindow::~GlWindow() {
 
 		delete m_grid;
+		delete m_cylinder;
 	}
 
 	void GlWindow::setupBuffer()
 	{
 		m_grid = new grid();
+		m_cylinder = new cylinder();
 	}
 
 	void GlWindow::setSize(int width, int height) {
@@ -62,7 +64,9 @@
 
 		//rect->draw(model, viewMat, projection);
 
+		glm::mat4 origin = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f,0.0f, 0.0f));
 		m_grid->draw(model, viewMat, projection);
-
+		m_cylinder->draw(model, viewMat, projection, origin,0);
+		
 	}
 

@@ -103,5 +103,11 @@
     <None Include="Shader\black.vert">
       <Filter>소스 파일\Shader</Filter>
     </None>
+    <None Include="Shader\diffuse.vert">
+      <Filter>소스 파일\Shader</Filter>
+    </None>
+    <None Include="Shader\diffuse.frag">
+      <Filter>소스 파일\Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

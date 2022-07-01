@@ -11,6 +11,7 @@
 #include "glm/gtc/matrix_inverse.hpp"
 
 #include"Model/Grid.h"
+#include"Model/Cylinder.h"
 #include"Camera.h"
 #include"ModelView.h"
 
@@ -38,6 +39,8 @@ private:
 	float m_ratio;
 
 	grid* m_grid;
+	cylinder* m_cylinder;
+
 
 	void setupBuffer();
 
