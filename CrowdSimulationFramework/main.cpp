@@ -14,6 +14,7 @@
 #include "ImGui/imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "imguifilesystem.h"
+#include"imgui_user_rendering_interface.h"
 
 #include "GlWindow.h"
 #include"Camera.h"
@@ -21,11 +22,12 @@
 
 const char* glsl_version = "#version 130";
 
-static int windowWidth = 1300;
+static int windowWidth = 1500;
 static int windowHeight = 800;
 static int screenWidth = 800;
 static int screenHeight = 800;
-static int inspectorWidth = 300;
+static int inspectorWidth = 500;
+static int hierachyWidth = 200;
 
 GlWindow* win;
 camera cam(glm::vec3(0.0f, -150.0f, 150.0f));
@@ -50,6 +52,18 @@ float zoom = 45.0f;
 double _frame_start_time;
 double _delta_time;
 
+template <class T>
+class PingPongId
+{
+public:
+	void swap() { _ping = pong(); }
+	T ping() { return _ping; };
+	T pong() { return (_ping + 1) % 2; }
+
+private:
+	T _ping;
+};
+
 int _frame_count{};
 double _time_acc{};
 double _cpu_time{};
@@ -65,6 +79,7 @@ GLuint64 _gpu_time_avg{};
 GLuint64 _gpu_time_acc{};
 
 GLuint _gpu_timer_query[2]{};
+PingPongId <size_t> _swap_id;
 
 static void ShowExampleAppMainMenuBar(bool* p_open);
 static void ShowExampleMenuFile();
@@ -72,6 +87,9 @@ static void ShowInspectorOverlay(bool* p_open);
 static void ShowHierachyOverlay(bool* p_open);
 
 std::vector<glm::vec2> selectPos;
+
+//user rendering interface
+imguiURI winURI;
 
 using namespace std;
 
@@ -136,72 +154,75 @@ void drawStatsImGui(GlWindow* win, const double& time, const double& delta_time)
 		_frame_count = 0;
 	}
 
-	//	ImGui::InputInt("Rendered Objects:", &_rendered_objects, 0, 0,
-	//		ImGuiInputTextFlags_ReadOnly);
-	ImGui::Checkbox("Draw Time plots", &draw_time_plot);
-	ImGui::SliderScalar("Refresh Interval", ImGuiDataType_Double,
-		&refresh_interval, &refresh_interval_min,
-		&refresh_interval_max, "%.1f s");
+	if (ImGui::TreeNode("Scene Stats")) {
+		//	ImGui::InputInt("Rendered Objects:", &_rendered_objects, 0, 0,
+		//		ImGuiInputTextFlags_ReadOnly);
+		ImGui::Checkbox("Draw Time plots", &draw_time_plot);
+		ImGui::SliderScalar("Refresh Interval", ImGuiDataType_Double,
+			&refresh_interval, &refresh_interval_min,
+			&refresh_interval_max, "%.1f s");
 
-	ImGui::InputDouble("CPU Time (ms)", &_cpu_time, 0, 0, "%.2f",
-		ImGuiInputTextFlags_ReadOnly);
-	ImGui::InputDouble("CPU Time Min (ms)", &_cpu_time_min, 0, 0, "%.2f",
-		ImGuiInputTextFlags_ReadOnly);
-	ImGui::InputDouble("CPU Time Max (ms)", &_cpu_time_max, 0, 0, "%.2f",
-		ImGuiInputTextFlags_ReadOnly);
-	ImGui::InputDouble("CPU Time Avg (ms)", &_cpu_time_avg, 0, 0, "%.2f",
-		ImGuiInputTextFlags_ReadOnly);
-	if (draw_time_plot)
-	{
-		ImGui::InputFloat("CPU Histogram Max", &cpu_histogram_max);
+		ImGui::InputDouble("CPU Time (ms)", &_cpu_time, 0, 0, "%.2f",
+			ImGuiInputTextFlags_ReadOnly);
+		ImGui::InputDouble("CPU Time Min (ms)", &_cpu_time_min, 0, 0, "%.2f",
+			ImGuiInputTextFlags_ReadOnly);
+		ImGui::InputDouble("CPU Time Max (ms)", &_cpu_time_max, 0, 0, "%.2f",
+			ImGuiInputTextFlags_ReadOnly);
+		ImGui::InputDouble("CPU Time Avg (ms)", &_cpu_time_avg, 0, 0, "%.2f",
+			ImGuiInputTextFlags_ReadOnly);
+		if (draw_time_plot)
+		{
+			ImGui::InputFloat("CPU Histogram Max", &cpu_histogram_max);
 
 
-		if (cpu_histogram_max < 0) cpu_histogram_max = FLT_MAX;
-		ImGui::Text("Avg CPU Time %.4f within %.1fs", _cpu_time_avg,
-			refresh_interval);
-		ImGui::PlotHistogram("CPU Times", cpu_time_data,
-			IM_ARRAYSIZE(cpu_time_data), 0, nullptr, 0,
-			cpu_histogram_max,
-			ImVec2(0, 80));
-	}
+			if (cpu_histogram_max < 0) cpu_histogram_max = FLT_MAX;
+			ImGui::Text("Avg CPU Time %.4f within %.1fs", _cpu_time_avg,
+				refresh_interval);
+			ImGui::PlotHistogram("CPU Times", cpu_time_data,
+				IM_ARRAYSIZE(cpu_time_data), 0, nullptr, 0,
+				cpu_histogram_max,
+				ImVec2(0, 80));
+		}
 
-	ImGui::Checkbox("Show GPU Time in ms", &show_gpu_ms);
-	if (show_gpu_ms)
-	{
-		double gpu_time_min_ms = _gpu_time_min * 1e-6;
-		double gpu_time_max_ms = _gpu_time_max * 1e-6;
-		double gpu_time_avg_ms = _gpu_time_avg * 1e-6;
-		ImGui::InputDouble("GPU Time (ms)", &gpu_time_ms, 0, 0, "%.2f",
-			ImGuiInputTextFlags_ReadOnly);
-		ImGui::InputDouble("GPU Time Min (ms)", &gpu_time_min_ms, 0, 0, "%.2f",
-			ImGuiInputTextFlags_ReadOnly);
-		ImGui::InputDouble("GPU Time Max (ms)", &gpu_time_max_ms, 0, 0, "%.2f",
-			ImGuiInputTextFlags_ReadOnly);
-		ImGui::InputDouble("GPU Time Avg (ms)", &gpu_time_avg_ms, 0, 0, "%.2f",
-			ImGuiInputTextFlags_ReadOnly);
-	}
-	else
-	{
-		ImGui::InputScalar("GPU Time (ns)", ImGuiDataType_U64, &_gpu_time, 0, 0, 0,
-			ImGuiInputTextFlags_ReadOnly);
-		ImGui::InputScalar("GPU Time Min (ns)", ImGuiDataType_U64, &_gpu_time_min,
-			0, 0, 0, ImGuiInputTextFlags_ReadOnly);
-		ImGui::InputScalar("GPU Time Max (ns)", ImGuiDataType_U64, &_gpu_time_max,
-			0, 0, 0, ImGuiInputTextFlags_ReadOnly);
-		ImGui::InputScalar("GPU Time Avg (ns)", ImGuiDataType_U64, &_gpu_time_avg,
-			0, 0, 0, ImGuiInputTextFlags_ReadOnly);
-	}
+		ImGui::Checkbox("Show GPU Time in ms", &show_gpu_ms);
+		if (show_gpu_ms)
+		{
+			double gpu_time_min_ms = _gpu_time_min * 1e-6;
+			double gpu_time_max_ms = _gpu_time_max * 1e-6;
+			double gpu_time_avg_ms = _gpu_time_avg * 1e-6;
+			ImGui::InputDouble("GPU Time (ms)", &gpu_time_ms, 0, 0, "%.2f",
+				ImGuiInputTextFlags_ReadOnly);
+			ImGui::InputDouble("GPU Time Min (ms)", &gpu_time_min_ms, 0, 0, "%.2f",
+				ImGuiInputTextFlags_ReadOnly);
+			ImGui::InputDouble("GPU Time Max (ms)", &gpu_time_max_ms, 0, 0, "%.2f",
+				ImGuiInputTextFlags_ReadOnly);
+			ImGui::InputDouble("GPU Time Avg (ms)", &gpu_time_avg_ms, 0, 0, "%.2f",
+				ImGuiInputTextFlags_ReadOnly);
+		}
+		else
+		{
+			ImGui::InputScalar("GPU Time (ns)", ImGuiDataType_U64, &_gpu_time, 0, 0, 0,
+				ImGuiInputTextFlags_ReadOnly);
+			ImGui::InputScalar("GPU Time Min (ns)", ImGuiDataType_U64, &_gpu_time_min,
+				0, 0, 0, ImGuiInputTextFlags_ReadOnly);
+			ImGui::InputScalar("GPU Time Max (ns)", ImGuiDataType_U64, &_gpu_time_max,
+				0, 0, 0, ImGuiInputTextFlags_ReadOnly);
+			ImGui::InputScalar("GPU Time Avg (ns)", ImGuiDataType_U64, &_gpu_time_avg,
+				0, 0, 0, ImGuiInputTextFlags_ReadOnly);
+		}
 
-	if (draw_time_plot)
-	{
-		ImGui::InputFloat("GPU Histogram Max", &gpu_histogram_max);
-		if (gpu_histogram_max < 0) gpu_histogram_max = FLT_MAX;
-		ImGui::Text("Avg GPU Time %.4f within %.1fs", _gpu_time_avg * 1e-6,
-			refresh_interval);
-		ImGui::PlotHistogram("GPU Times", gpu_time_data,
-			IM_ARRAYSIZE(gpu_time_data), 0, nullptr, 0,
-			gpu_histogram_max,
-			ImVec2(0, 80));
+		if (draw_time_plot)
+		{
+			ImGui::InputFloat("GPU Histogram Max", &gpu_histogram_max);
+			if (gpu_histogram_max < 0) gpu_histogram_max = FLT_MAX;
+			ImGui::Text("Avg GPU Time %.4f within %.1fs", _gpu_time_avg * 1e-6,
+				refresh_interval);
+			ImGui::PlotHistogram("GPU Times", gpu_time_data,
+				IM_ARRAYSIZE(gpu_time_data), 0, nullptr, 0,
+				gpu_histogram_max,
+				ImVec2(0, 80));
+		}
+		ImGui::TreePop();
 	}
 }
 
@@ -218,7 +239,6 @@ void statUI(GlWindow* win)
 		fps = frame_count / dt;
 		frame_count = 0;
 		dt -= 1.0f;
-
 	}
 
 	float frame_time_ms = 1000.0f * static_cast<float>(_delta_time * 0.7);
@@ -232,7 +252,6 @@ void statUI(GlWindow* win)
 	ImGui::InputFloat("FPS", &mfps, 0, 0, "%.1f",
 		ImGuiInputTextFlags_ReadOnly);
 	ImGui::Separator();
-	ImGui::Text("Scene Stats:");
 	drawStatsImGui(win, _frame_start_time, _delta_time);
 
 }
@@ -249,7 +268,22 @@ static void ShowInspectorOverlay(bool* p_open)
 	}
 
 	statUI(win);
+	ImGui::Separator();
+	ImGui::Text("Crowd Simulation");
 	
+	if (ImGui::Button(u8">",ImVec2(40,40))) {
+		
+	}
+	ImGui::SameLine();
+	if (ImGui::Button(u8"||", ImVec2(40, 40))) {
+
+	}
+	ImGui::SameLine();
+	if (ImGui::Button(u8"¤±", ImVec2(40, 40))) {
+
+	}
+
+
 	ImGui::End();
 }
 
@@ -276,8 +310,8 @@ void window_size_callback(GLFWwindow* window, int width, int height)
 {
 	windowWidth = width;
 	windowHeight = height;
-	win->setSize(windowWidth, windowHeight);
-	win->setAspect(windowWidth / (float)windowHeight);
+	win->setSize(windowWidth- inspectorWidth - hierachyWidth, windowHeight);
+	win->setAspect((windowWidth-inspectorWidth-hierachyWidth) / (float)windowHeight);
 }
 
 /// <summary>
@@ -288,14 +322,22 @@ static void ShowExampleAppMainMenuBar(bool* p_open)
 {
 	if (ImGui::BeginMainMenuBar())
 	{
-		if (ImGui::BeginMenu("File"))
+		if (ImGui::BeginMenu("Agent"))
 		{
 			ShowExampleMenuFile();
 			ImGui::EndMenu();
 		}
-		if (ImGui::BeginMenu("GameObject"))
+		if (ImGui::BeginMenu("Obstacle"))
 		{
 			
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Grid"))
+		{
+			winURI.printObj(win->getSelectedObj());
+			if (ImGui::Button("Apply")) {
+				win->update();
+			}
 			ImGui::EndMenu();
 		}
 		ImGui::EndMainMenuBar();
@@ -535,6 +577,12 @@ int main(void)
 
 	win = new GlWindow(screenWidth, screenHeight);
 
+	// Timer Queries
+	glGenQueries(2, _gpu_timer_query);
+	// Dummy query
+	glBeginQuery(GL_TIME_ELAPSED, _gpu_timer_query[_swap_id.pong()]);
+	glEndQuery(GL_TIME_ELAPSED);
+
 	bool show_test_window = true;
 	bool show_another_window = true;
 	bool show_menubar = false;
@@ -572,6 +620,7 @@ int main(void)
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
 	{
+
 		_delta_time = glfwGetTime() - _frame_start_time;
 		_frame_start_time = glfwGetTime();
 
@@ -579,6 +628,9 @@ int main(void)
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+
+		_cpu_time = glfwGetTime();
+		glBeginQuery(GL_TIME_ELAPSED, _gpu_timer_query[_swap_id.ping()]);
 
 		// Rendering
 		int display_w, display_h;
@@ -605,6 +657,11 @@ int main(void)
 		if (no_titlebar)  window_flags |= ImGuiWindowFlags_NoTitleBar;
 
 		win->draw(cam, zoom);
+
+		glEndQuery(GL_TIME_ELAPSED);
+		_cpu_time = (glfwGetTime() - _cpu_time) * 1000.0;
+		glGetQueryObjectui64v(_gpu_timer_query[_swap_id.pong()], GL_QUERY_RESULT, &_gpu_time);
+		_swap_id.swap();
 
 
 		ImGui::Render();

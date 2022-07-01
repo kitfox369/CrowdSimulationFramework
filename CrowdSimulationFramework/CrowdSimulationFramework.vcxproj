@@ -146,18 +146,25 @@
     <ClCompile Include="GlWindow.cpp" />
     <ClCompile Include="ImGui\imgui_impl_glfw.cpp" />
     <ClCompile Include="ImGui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="imgui_user_rendering_interface.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Model\Cylinder.cpp" />
     <ClCompile Include="Model\Grid.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Component.h" />
     <ClInclude Include="GlWindow.h" />
     <ClInclude Include="ImGui\imgui_impl_glfw.h" />
     <ClInclude Include="ImGui\imgui_impl_opengl3.h" />
     <ClInclude Include="ImGui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="imgui_user_rendering_interface.h" />
     <ClInclude Include="Loader.h" />
     <ClInclude Include="ModelView.h" />
+    <ClInclude Include="Model\Cylinder.h" />
     <ClInclude Include="Model\Grid.h" />
+    <ClInclude Include="SiAgent.h" />
+    <ClInclude Include="Simulator.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\black.frag" />

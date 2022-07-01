@@ -1,12 +1,16 @@
 #include"Grid.h"
 
 grid::grid() {
+	myTrns = { {0,0,0},{0,0,0},{0,0,0} };
+	gridSize = 100.0f;
+	gridNum = 25;
+	tag = "grid";
 	setup();
 }
 
 void grid::setup() {
-	gridSize = 20.0f;
-	for (int i = -gridSize; i <= gridSize; i += gridSize / 4)
+	vertexPositions.clear();
+	for (int i = -gridSize; i <= gridSize; i += gridSize / gridNum)
 	{
 		vertexPositions.push_back(glm::vec4(i, -gridSize, 0.0f, 1.0f));
 		vertexPositions.push_back(glm::vec4(i, gridSize, 0.0f, 1.0f));

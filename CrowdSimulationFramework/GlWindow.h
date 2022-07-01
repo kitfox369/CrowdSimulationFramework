@@ -28,7 +28,8 @@ public:
 	GLuint vaoHandle;			//
 	GLuint vbo_vetexPositon, vbo_colors;
 
-
+	grid* getSelectedObj();
+	void update();
 private:
 	ModelView m_model;
 
@@ -39,6 +40,7 @@ private:
 	grid* m_grid;
 
 	void setupBuffer();
+
 };
 
 

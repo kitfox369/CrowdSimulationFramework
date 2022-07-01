@@ -1,15 +1,14 @@
-#ifndef GRID_H
-#define GRID_H
+#ifndef CYLINDER_H
+#define CYLINDER_H
 
 #include"../Component.h"
 
-class grid {
-public:
+class cylinder {
 	Transform myTrns;
 	float gridSize;
 	int gridNum;
 	std::string tag;
-	grid();
+	cylinder();
 	void setup();
 	void update();
 	void draw(glm::mat4& model, glm::mat4& view, glm::mat4& projection);
@@ -18,7 +17,6 @@ private:
 	std::vector<glm::vec4> vertexPositions;
 	GLuint vaoHandle;
 	GLuint vbo_vertexPos, vbo_colors;
-	
 };
 
-#endif // !GRID_H
+#endif

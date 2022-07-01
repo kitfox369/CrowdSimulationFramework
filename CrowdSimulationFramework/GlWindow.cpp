@@ -31,6 +31,14 @@
 		m_ratio = ratio;
 	}
 
+	grid* GlWindow::getSelectedObj() {
+		return m_grid;
+	}
+
+	void GlWindow::update() {
+		m_grid->setup();
+	}
+
 	void GlWindow::draw(camera cam, float zoom)
 	{
 		glClearColor(0.5f, 0.5f, 0.5f, 0);		//background color
@@ -46,7 +54,6 @@
 
 		glm::mat4 viewMat = cam.GetViewMatrix();
 
-		//glm::mat4 projection = glm::ortho(-(m_width / rate), m_width / rate , -(m_height / rate), m_height / rate , -1.0f, 1000.0f);
 		glm::mat4 projection = glm::perspective(glm::radians(zoom), m_ratio, 0.1f, 1000.0f);
 
 
