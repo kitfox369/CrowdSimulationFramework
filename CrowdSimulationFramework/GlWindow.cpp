@@ -48,8 +48,8 @@
 
 		glEnable(GL_CLIP_DISTANCE0);
 
-		//glEnable(GL_DEPTH_TEST);			//test whether an object is in front of other object?
-		glEnable(GL_BLEND);
+		glEnable(GL_DEPTH_TEST);			//test whether an object is in front of other object?
+		//glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		glViewport(200, 0, m_width, m_height);
@@ -58,15 +58,18 @@
 
 		glm::mat4 projection = glm::perspective(glm::radians(zoom), m_ratio, 0.1f, 1000.0f);
 
-
+		glm::mat4 model;
 		m_model.glPushMatrix();
-		glm::mat4 model = m_model.getMatrix();
-
+		model = m_model.getMatrix();
 		//rect->draw(model, viewMat, projection);
 
 		glm::mat4 origin = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f,0.0f, 0.0f));
 		m_grid->draw(model, viewMat, projection);
+
+		m_model.glRotate(90, 1, 0,0);
+		model = m_model.getMatrix();
 		m_cylinder->draw(model, viewMat, projection, origin,0);
 		
+		m_model.glPopMatrix();
 	}
 

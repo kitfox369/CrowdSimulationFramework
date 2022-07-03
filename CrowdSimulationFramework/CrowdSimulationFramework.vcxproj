@@ -171,6 +171,8 @@
     <None Include="Shader\black.vert" />
     <None Include="Shader\diffuse.frag" />
     <None Include="Shader\diffuse.vert" />
+    <None Include="Shader\Phong.frag" />
+    <None Include="Shader\Phong.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
