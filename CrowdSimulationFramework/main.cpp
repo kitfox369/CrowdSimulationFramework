@@ -656,7 +656,7 @@ int main(void)
 		ImGuiWindowFlags window_flags = 0;
 		if (no_titlebar)  window_flags |= ImGuiWindowFlags_NoTitleBar;
 
-		win->draw(cam, zoom);
+		win->draw(cam, zoom,_delta_time);
 
 		glEndQuery(GL_TIME_ELAPSED);
 		_cpu_time = (glfwGetTime() - _cpu_time) * 1000.0;

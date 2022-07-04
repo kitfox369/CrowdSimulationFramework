@@ -2,20 +2,27 @@
 
 grid::grid() {
 	myTrns = { {0,0,0},{0,0,0},{0,0,0} };
-	gridSize = 100.0f;
-	gridNum = 25;
+	gridSize = 10.0f;
+	gridNum = 10;
+	gridWidth = gridSize * gridNum;
 	tag = "grid";
 	setup();
 }
 
 void grid::setup() {
+
+	if (gridSize < 10)		gridSize = 10;
+	if (gridNum < 10)		gridNum = 10;
+
+	gridWidth = gridSize * gridNum;
+
 	vertexPositions.clear();
-	for (int i = -gridSize; i <= gridSize; i += gridSize / gridNum)
+	for (int i = -gridWidth; i <= gridWidth; i += gridWidth / gridNum)
 	{
-		vertexPositions.push_back(glm::vec4(i, -gridSize, 0.0f, 1.0f));
-		vertexPositions.push_back(glm::vec4(i, gridSize, 0.0f, 1.0f));
-		vertexPositions.push_back(glm::vec4(-gridSize, i, 0.0f, 1.0f));
-		vertexPositions.push_back(glm::vec4(gridSize, i, 0.0f, 1.0f));
+		vertexPositions.push_back(glm::vec4(i, -gridWidth, 0.0f, 1.0f));
+		vertexPositions.push_back(glm::vec4(i, gridWidth, 0.0f, 1.0f));
+		vertexPositions.push_back(glm::vec4(-gridWidth, i, 0.0f, 1.0f));
+		vertexPositions.push_back(glm::vec4(gridWidth, i, 0.0f, 1.0f));
 	}
 
 	m_shaderProgram = new ShaderProgram();

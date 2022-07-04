@@ -95,6 +95,9 @@
     <ClInclude Include="Model\Cylinder.h">
       <Filter>헤더 파일\Model</Filter>
     </ClInclude>
+    <ClInclude Include="agenData.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\black.frag">

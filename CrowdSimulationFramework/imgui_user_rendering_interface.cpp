@@ -5,9 +5,9 @@ void imguiURI::printObj(grid* obj) {
 	printTransform(obj->myTrns);
 	if (obj->tag == "grid") {
 		ImGui::Separator();
-		ImGui::InputFloat("gridSize", &obj->gridSize);
+		ImGui::InputInt("gridSize", &obj->gridSize,25);
 		ImGui::Separator();
-		ImGui::InputInt("gridNum", &obj->gridNum);
+		ImGui::InputInt("gridNum", &obj->gridNum,5);
 	}
 }
 

@@ -14,6 +14,7 @@
 #include"Model/Cylinder.h"
 #include"Camera.h"
 #include"ModelView.h"
+#include"SiAgent.h"
 
 class GlWindow {
 public:
@@ -24,7 +25,7 @@ public:
 
 	void setSize(int width, int height);
 	void setAspect(float ratio);
-	void draw(camera cam, float zoom);
+	void draw(camera cam, float zoom, float _deltaTime);
 
 	GLuint vaoHandle;			//
 	GLuint vbo_vetexPositon, vbo_colors;
@@ -40,6 +41,10 @@ private:
 
 	grid* m_grid;
 	cylinder* m_cylinder;
+
+
+	std::vector<SiAgent*> agent;
+	int agentNum;
 
 
 	void setupBuffer();

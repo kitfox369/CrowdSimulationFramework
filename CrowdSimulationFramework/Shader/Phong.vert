@@ -25,7 +25,11 @@ uniform MaterialInfo Material;
 
 uniform mat4 ModelViewMatrix;
 uniform mat3 NormalMatrix;
-uniform mat4 mvp;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+
+uniform mat4 location;
 
 void main()
 {
@@ -45,6 +49,6 @@ void main()
 
 	f_color = ambient + diffuse + spec;
 
-	gl_Position = mvp * vec4(coord3d,1.0);
+	gl_Position = projection* view *location* model * vec4(coord3d,1.0);
 	
 }

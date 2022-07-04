@@ -6,8 +6,7 @@
 class grid {
 public:
 	Transform myTrns;
-	float gridSize;
-	int gridNum;
+	int gridSize,gridNum,gridWidth;
 	std::string tag;
 	grid();
 	void setup();

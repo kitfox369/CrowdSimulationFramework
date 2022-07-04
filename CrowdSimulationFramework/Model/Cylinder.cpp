@@ -148,9 +148,11 @@ void cylinder::setup()
 		m_shaderProgram->addAttribute("coord3d");
 		m_shaderProgram->addAttribute("v_normal");
 
-		m_shaderProgram->addUniform("mvp");
 		m_shaderProgram->addUniform("ModelViewMatrix");
 		m_shaderProgram->addUniform("NormalMatrix");
+		m_shaderProgram->addUniform("model");
+		m_shaderProgram->addUniform("view");
+		m_shaderProgram->addUniform("projection");
 
 		m_shaderProgram->addUniform("Light.Position");
 		m_shaderProgram->addUniform("Light.La");
@@ -161,7 +163,7 @@ void cylinder::setup()
 		m_shaderProgram->addUniform("Material.Ks");
 		m_shaderProgram->addUniform("Material.Shiness");
 
-
+		m_shaderProgram->addUniform("location");
 
 		//create vbo for vertices
 		glGenBuffers(1, &vbo_cube_vertices);
@@ -205,8 +207,6 @@ void cylinder::draw(glm::mat4& model, glm::mat4& view, glm::mat4& projection, gl
 {
 
 	glm::mat4 mview = view * model;
-	glm::mat4 mvp = projection * view * model;
-
 	glm::mat4 imvp = glm::inverse(mview);
 	glm::mat3 nmat = glm::mat3(glm::transpose(imvp));
 
@@ -228,7 +228,9 @@ void cylinder::draw(glm::mat4& model, glm::mat4& view, glm::mat4& projection, gl
 
 	glUniformMatrix4fv(m_shaderProgram->uniform("ModelViewMatrix"), 1, GL_FALSE, glm::value_ptr(mview));
 	glUniformMatrix3fv(m_shaderProgram->uniform("NormalMatrix"), 1, GL_FALSE, glm::value_ptr(nmat));
-	glUniformMatrix4fv(m_shaderProgram->uniform("mvp"), 1, GL_FALSE, glm::value_ptr(mvp));
+	glUniformMatrix4fv(m_shaderProgram->uniform("model"), 1, GL_FALSE, glm::value_ptr(model));
+	glUniformMatrix4fv(m_shaderProgram->uniform("view"), 1, GL_FALSE, glm::value_ptr(view));
+	glUniformMatrix4fv(m_shaderProgram->uniform("projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
 	glUniform4fv(m_shaderProgram->uniform("Light.Position"), 1, glm::value_ptr(lightPos));
 	glUniform3fv(m_shaderProgram->uniform("Light.La"), 1, glm::value_ptr(La));
@@ -239,6 +241,8 @@ void cylinder::draw(glm::mat4& model, glm::mat4& view, glm::mat4& projection, gl
 	glUniform3fv(m_shaderProgram->uniform("Material.Kd"), 1, glm::value_ptr(Kd));
 	glUniform3fv(m_shaderProgram->uniform("Material.Ks"), 1, glm::value_ptr(Ks));
 	glUniform1fv(m_shaderProgram->uniform("Material.Shiness"), 1, &shiness);
+
+	glUniformMatrix4fv(m_shaderProgram->uniform("location"), 1, GL_FALSE, glm::value_ptr(offset));
 
 	glBindVertexArray(vaoHandle);
 
