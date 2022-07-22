@@ -54,6 +54,18 @@
     <ClCompile Include="Model\Cylinder.cpp">
       <Filter>소스 파일\Model</Filter>
     </ClCompile>
+    <ClCompile Include="interval.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="texUtils.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\AnimatedModel.cpp">
+      <Filter>소스 파일\Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GlWindow.h">
@@ -98,6 +110,30 @@
     <ClInclude Include="agenData.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="interval.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="texUtils.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="meshoptimizer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\AnimatedModel.h">
+      <Filter>헤더 파일\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemInfo.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\black.frag">
@@ -116,6 +152,12 @@
       <Filter>소스 파일\Shader</Filter>
     </None>
     <None Include="Shader\Phong.frag">
+      <Filter>소스 파일\Shader</Filter>
+    </None>
+    <None Include="Shader\model.vert">
+      <Filter>소스 파일\Shader</Filter>
+    </None>
+    <None Include="Shader\model.frag">
       <Filter>소스 파일\Shader</Filter>
     </None>
   </ItemGroup>

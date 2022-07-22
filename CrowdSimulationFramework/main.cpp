@@ -8,6 +8,8 @@
 #include<string>
 #include<vector>
 #include<sstream>
+
+
 #include <windows.h>
 
 #include"imgui.h"
@@ -17,10 +19,12 @@
 #include"imgui_user_rendering_interface.h"
 
 #include "GlWindow.h"
+#include"SystemInfo.h"
 #include"Camera.h"
 #include <algorithm>
 
 const char* glsl_version = "#version 130";
+
 
 static int windowWidth = 1500;
 static int windowHeight = 800;
@@ -34,7 +38,9 @@ camera cam(glm::vec3(0.0f, -150.0f, 150.0f));
 
 static bool show_app_layout = false;
 
-int m_amount = 0;						//객체의 수
+SystemInfo sysInfo = SystemInfo::instance();
+
+int m_amount = 10;						//객체의 수
 int randAgentNum;
 int randRange;
 
@@ -346,37 +352,10 @@ static void ShowExampleAppMainMenuBar(bool* p_open)
 
 static void ShowExampleMenuFile()
 {
-	if (ImGui::MenuItem("Agent Setting"))
-	{
-		//win->initialize();
+	ImGui::InputInt("Agent Amount", &sysInfo.agentAmount, 1);
+	if (ImGui::Button("Apply")) {
 	}
-	if (ImGui::MenuItem("Line"))
-	{
-		//win->initialize(1);
-		//		win->changeModel("nanosuit/nanosuit.obj");
-	}
-	if (ImGui::MenuItem("close"))
-	{
-		//win->changeModel("");
-	}
-	if (ImGui::BeginMenu("Open Recent"))
-	{
-		ImGui::MenuItem("fish_hat.c");
-		ImGui::MenuItem("fish_hat.inl");
-		ImGui::MenuItem("fish_hat.h");
-		if (ImGui::BeginMenu("More.."))
-		{
-			ImGui::MenuItem("Hello");
-			ImGui::MenuItem("Sailor");
-			if (ImGui::BeginMenu("Recurse.."))
-			{
-				ShowExampleMenuFile();
-				ImGui::EndMenu();
-			}
-			ImGui::EndMenu();
-		}
-		ImGui::EndMenu();
-	}
+	
 
 }
 
@@ -540,7 +519,7 @@ int main(void)
 	if (!glfwInit())
 		return -1;
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);		//OpenGl 4.0을 쓰겠다
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);		//OpenGl 3.0을 쓰겠다
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);		//3.0
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);	//CORE_PROFILE : 최신의 mordern한 기능만 가져다가 쓰는것		COMFORT_PROFILE : 예전 버전도 있음
 
@@ -551,6 +530,8 @@ int main(void)
 		glfwTerminate();
 		return -1;
 	}
+
+
 
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
@@ -594,7 +575,7 @@ int main(void)
 	_frame_start_time = glfwGetTime();
 
 	float startFrame = glfwGetTime();
-
+	float animationTime;
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -623,6 +604,7 @@ int main(void)
 
 		_delta_time = glfwGetTime() - _frame_start_time;
 		_frame_start_time = glfwGetTime();
+		animationTime = _frame_start_time - startFrame;
 
 		// Start the Dear ImGui frame
 		ImGui_ImplOpenGL3_NewFrame();
@@ -656,7 +638,7 @@ int main(void)
 		ImGuiWindowFlags window_flags = 0;
 		if (no_titlebar)  window_flags |= ImGuiWindowFlags_NoTitleBar;
 
-		win->draw(cam, zoom,_delta_time);
+		win->draw(cam, zoom,_delta_time, animationTime);
 
 		glEndQuery(GL_TIME_ELAPSED);
 		_cpu_time = (glfwGetTime() - _cpu_time) * 1000.0;

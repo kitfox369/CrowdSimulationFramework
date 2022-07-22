@@ -12,9 +12,11 @@
 
 #include"Model/Grid.h"
 #include"Model/Cylinder.h"
+#include"Model/AnimatedModel.h"
 #include"Camera.h"
 #include"ModelView.h"
 #include"SiAgent.h"
+#include"SystemInfo.h"
 
 class GlWindow {
 public:
@@ -25,7 +27,7 @@ public:
 
 	void setSize(int width, int height);
 	void setAspect(float ratio);
-	void draw(camera cam, float zoom, float _deltaTime);
+	void draw(camera cam, float zoom, float _deltaTime,float animationTime);
 
 	GLuint vaoHandle;			//
 	GLuint vbo_vetexPositon, vbo_colors;
@@ -42,6 +44,7 @@ private:
 	grid* m_grid;
 	cylinder* m_cylinder;
 
+	AnimatedModel* m_animatedModel;
 
 	std::vector<SiAgent*> agent;
 	int agentNum;

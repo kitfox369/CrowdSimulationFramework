@@ -21,8 +21,10 @@
 	{
 		m_grid = new grid();
 		m_cylinder = new cylinder();
+		m_animatedModel = new AnimatedModel();
 
-		agentNum = 5;
+
+		agentNum = SystemInfo::instance().agentAmount;
 		for (int i = 0; i < agentNum; i++) {
 			glm::vec2 initialPos(0.0f, i*10.0f);
 			glm::vec2 goalPos(50.0f, i * 10.0f);
@@ -48,7 +50,7 @@
 		m_grid->setup();
 	}
 
-	void GlWindow::draw(camera cam, float zoom,float _deltaTime)
+	void GlWindow::draw(camera cam, float zoom,float _deltaTime, float animationTime)
 	{
 		glClearColor(0.5f, 0.5f, 0.5f, 0);		//background color
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);		//clear up color and depth buffer
@@ -71,8 +73,6 @@
 		//rect->draw(model, viewMat, projection);
 		glm::mat4 offset;
 
-		
-
 		glm::mat4 origin = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f,0.0f, 0.0f));
 		
 		m_grid->draw(model, viewMat, projection);
@@ -85,6 +85,11 @@
 			m_cylinder->draw(model, viewMat, projection, offset, 0);
 		}
 		
+
+		m_model.glScale(0.05f, 0.05f, 0.05f);
+		model = m_model.getMatrix();
+		m_animatedModel->drawMesh(model, viewMat, projection,cam.Position,animationTime,0,1,1);
+
 		m_model.glPopMatrix();
 	}
 
