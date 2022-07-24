@@ -24,14 +24,20 @@
 		m_animatedModel = new AnimatedModel();
 
 
+		setSIAgentNum();
+	}
+
+	void GlWindow::setSIAgentNum() {
+		agent.clear();
 		agentNum = SystemInfo::instance().agentAmount;
 		for (int i = 0; i < agentNum; i++) {
-			glm::vec2 initialPos(0.0f, i*10.0f);
+			glm::vec2 initialPos(0.0f, i * 10.0f);
 			glm::vec2 goalPos(50.0f, i * 10.0f);
 			agent.push_back(new SiAgent(0, initialPos));
 			agent[i]->addGoalPos(goalPos);
 		}
 	}
+
 
 	void GlWindow::setSize(int width, int height) {
 		m_width = width;

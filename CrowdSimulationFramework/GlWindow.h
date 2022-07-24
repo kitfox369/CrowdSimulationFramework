@@ -25,6 +25,8 @@ public:
 	
 	ShaderProgram* m_shaderProgram;
 
+	void setSIAgentNum();
+
 	void setSize(int width, int height);
 	void setAspect(float ratio);
 	void draw(camera cam, float zoom, float _deltaTime,float animationTime);
@@ -36,7 +38,6 @@ public:
 	void update();
 private:
 	ModelView m_model;
-
 	int m_width;
 	int m_height;
 	float m_ratio;

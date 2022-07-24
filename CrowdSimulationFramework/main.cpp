@@ -38,7 +38,7 @@ camera cam(glm::vec3(0.0f, -150.0f, 150.0f));
 
 static bool show_app_layout = false;
 
-SystemInfo sysInfo = SystemInfo::instance();
+SystemInfo* SystemInfo::instance_ = nullptr;
 
 int m_amount = 10;						//°´Ã¼ÀÇ ¼ö
 int randAgentNum;
@@ -352,10 +352,10 @@ static void ShowExampleAppMainMenuBar(bool* p_open)
 
 static void ShowExampleMenuFile()
 {
-	ImGui::InputInt("Agent Amount", &sysInfo.agentAmount, 1);
+	ImGui::InputInt("Agent Amount", &SystemInfo::instance().agentAmount, 1);
 	if (ImGui::Button("Apply")) {
+		win->setSIAgentNum();
 	}
-	
 
 }
 
