@@ -156,6 +156,7 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Model\AnimatedModel.cpp" />
     <ClCompile Include="Model\Cylinder.cpp" />
+    <ClCompile Include="Model\DirCylinder.cpp" />
     <ClCompile Include="Model\Grid.cpp" />
     <ClCompile Include="texUtils.cpp" />
   </ItemGroup>
@@ -176,6 +177,7 @@
     <ClInclude Include="ModelView.h" />
     <ClInclude Include="Model\AnimatedModel.h" />
     <ClInclude Include="Model\Cylinder.h" />
+    <ClInclude Include="Model\DirCylinder.h" />
     <ClInclude Include="Model\Grid.h" />
     <ClInclude Include="SiAgent.h" />
     <ClInclude Include="Simulator.h" />
@@ -192,6 +194,7 @@
     <None Include="Shader\Phong.vert" />
     <None Include="Shader\model.frag" />
     <None Include="Shader\model.vert" />
+    <None Include="Shader\update.comp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

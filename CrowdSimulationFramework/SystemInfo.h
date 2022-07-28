@@ -12,7 +12,7 @@ public:
     }
 
     SystemInfo() {
-        agentAmount = 10;
+        agentAmount = 1;
     }
 
     ~SystemInfo() {

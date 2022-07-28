@@ -8,12 +8,17 @@ layout(location = 1) in vec3 aNormal;
 //layout(location = 3) in ivec4 BoneIDs;
 //layout(location = 4) in vec4 Weights;
 
+layout(std430, binding = 0) buffer ssbo1  //for specifying joints : full
+ {
+	mat4 aInstanceMatrix[];
+ };
 
 //out vec2 TexCoord;
 out vec3 color;
 
-uniform mat4 mvp;
-uniform mat4 modelView;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
 uniform mat3 NormalMatrix; 
 
 uniform vec4 LightPosition; 
@@ -27,6 +32,9 @@ struct MaterialInfo {
 };
 uniform MaterialInfo Material;
 
+uniform mat4 location;
+
+uniform uint numChar;
 
 vec3 ads(vec4 position, vec3 norm)
 {
@@ -52,11 +60,14 @@ void main() {
 	 float l = length(aPos);
    vec3 v = normalize(vec3(-aPos));
    vec3 eyeNorm = normalize(NormalMatrix * aNormal);
-   vec4 eyePosition = modelView * vec4(aPos,1.0);
+   vec4 eyePosition = view*model * vec4(aPos,1.0);
    color = ads(eyePosition,eyeNorm);
 
+   //uint index = gl_InstanceID+numChar;
 
    //TexCoord = aTexCoords;
-   gl_Position = mvp * vec4(aPos, 1.0f);
+   //gl_Position = projection*view*location*model * vec4(aPos, 1.0f);
+   //gl_Position = projection*view*aInstanceMatrix[gl_InstanceID] * vec4(aPos, 1.0f);
+   gl_Position = projection*view*location*model* vec4(aPos, 1.0f);
 
 }

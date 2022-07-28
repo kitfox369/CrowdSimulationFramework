@@ -1,11 +1,11 @@
 
-#ifndef _ANIMATED_MODEL_H_
-#define _ANIMATED_MODEL_H_
+#ifndef _DIRCYLINDER_H_
+#define _DIRCYLINDER_H_
 
 #include"../Component.h"
 #include"../Model.h"
 
-class AnimatedModel {
+class DirCylinder {
 	Model* m_meshModel;
 	void setup();
 
@@ -56,9 +56,10 @@ class AnimatedModel {
 
 public:
 
-	AnimatedModel(int agentNum);
-	~AnimatedModel();
+	DirCylinder(int agentNum);
+	~DirCylinder();
 
+	std::string readFile(const char* fileName);
 	GLuint loadComputeShader(const char* computeShaderFile);
 	void runComputeShader(int m_width, int m_height, glm::mat4& view, glm::vec3 camPos);
 	void drawMesh(glm::mat4& model, glm::mat4& view, glm::mat4& projection, glm::mat4& offset, glm::vec3 camPos, float animationTime, unsigned int st, unsigned int num, unsigned int shadow);

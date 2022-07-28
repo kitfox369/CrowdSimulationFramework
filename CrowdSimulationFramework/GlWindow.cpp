@@ -21,10 +21,13 @@
 	{
 		m_grid = new grid();
 		m_cylinder = new cylinder();
-		m_animatedModel = new AnimatedModel();
 
+		agentNum = SystemInfo::instance().agentAmount;
 
-		setSIAgentNum();
+		m_animatedModel = new AnimatedModel(agentNum);
+
+		m_dircylinder = new DirCylinder(agentNum);
+		//setSIAgentNum();
 	}
 
 	void GlWindow::setSIAgentNum() {
@@ -84,18 +87,19 @@
 		m_grid->draw(model, viewMat, projection);
 
 		m_model.glRotate(90, 1, 0,0);
+		m_model.glScale(0.05f, 0.05f, 0.05f);
 		model = m_model.getMatrix();
 		for (int i = 0; i < agent.size(); i++) {
 			agent[i]->doStep(_deltaTime);
 			offset = agent[i]->getPosition();
-			m_cylinder->draw(model, viewMat, projection, offset, 0);
+			//m_cylinder->draw(model, viewMat, projection, offset, 0);
+			
 		}
+		m_dircylinder->drawMesh(model, viewMat, projection, origin, cam.Position, animationTime, 0, 1, 1);
+		//m_animatedModel->runComputeShader(m_width, m_height, viewMat, cam.Position);
+
+		//m_animatedModel->drawMesh(model, viewMat, projection, offset, cam.Position, animationTime, 0, 1, 1);
 		
-
-		m_model.glScale(0.05f, 0.05f, 0.05f);
-		model = m_model.getMatrix();
-		m_animatedModel->drawMesh(model, viewMat, projection,cam.Position,animationTime,0,1,1);
-
+		
 		m_model.glPopMatrix();
 	}
-

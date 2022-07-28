@@ -66,6 +66,9 @@
     <ClCompile Include="Model\AnimatedModel.cpp">
       <Filter>소스 파일\Model</Filter>
     </ClCompile>
+    <ClCompile Include="Model\DirCylinder.cpp">
+      <Filter>소스 파일\Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GlWindow.h">
@@ -134,6 +137,9 @@
     <ClInclude Include="SystemInfo.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Model\DirCylinder.h">
+      <Filter>헤더 파일\Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\black.frag">
@@ -158,6 +164,9 @@
       <Filter>소스 파일\Shader</Filter>
     </None>
     <None Include="Shader\model.frag">
+      <Filter>소스 파일\Shader</Filter>
+    </None>
+    <None Include="Shader\update.comp">
       <Filter>소스 파일\Shader</Filter>
     </None>
   </ItemGroup>

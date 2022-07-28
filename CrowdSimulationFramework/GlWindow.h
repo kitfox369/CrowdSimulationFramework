@@ -13,6 +13,7 @@
 #include"Model/Grid.h"
 #include"Model/Cylinder.h"
 #include"Model/AnimatedModel.h"
+#include"Model/DirCylinder.h"
 #include"Camera.h"
 #include"ModelView.h"
 #include"SiAgent.h"
@@ -34,6 +35,7 @@ public:
 	GLuint vaoHandle;			//
 	GLuint vbo_vetexPositon, vbo_colors;
 
+
 	grid* getSelectedObj();
 	void update();
 private:
@@ -44,6 +46,7 @@ private:
 
 	grid* m_grid;
 	cylinder* m_cylinder;
+	DirCylinder* m_dircylinder;
 
 	AnimatedModel* m_animatedModel;
 
