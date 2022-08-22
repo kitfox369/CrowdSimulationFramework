@@ -13,12 +13,14 @@ public:
 
     SystemInfo() {
         agentAmount = 1;
+        modelKindNum = 0;
     }
 
     ~SystemInfo() {
     }
 
     int agentAmount;
+    int modelKindNum;
 
 private:
 

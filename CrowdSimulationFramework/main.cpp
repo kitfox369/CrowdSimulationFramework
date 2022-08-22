@@ -38,6 +38,8 @@ camera cam(glm::vec3(0.0f, -150.0f, 150.0f));
 
 static bool show_app_layout = false;
 
+static int model_kind_num = 0;
+
 SystemInfo* SystemInfo::instance_ = nullptr;
 
 int m_amount = 10;						//°´Ã¼ÀÇ ¼ö
@@ -352,9 +354,19 @@ static void ShowExampleAppMainMenuBar(bool* p_open)
 
 static void ShowExampleMenuFile()
 {
+	ImGuiStyle* style = &ImGui::GetStyle();
+	style->Colors[ImGuiCol_Text] = ImVec4(1.0f, 1.0f, 1.0f, 1.00f);
+	ImGui::PushStyleColor(ImGuiCol_Text, IM_COL32(0, 255, 0, 255));
+	ImGui::Text("Model");
+	ImGui::PopStyleColor();
+
+	ImGui::RadioButton("Cylinder", &SystemInfo::instance().modelKindNum, 0); ImGui::SameLine();
+	ImGui::RadioButton("Cylinder(with direction)", &SystemInfo::instance().modelKindNum, 1); ImGui::SameLine();
+	ImGui::RadioButton("Animated Model", &SystemInfo::instance().modelKindNum, 2);
+\
 	ImGui::InputInt("Agent Amount", &SystemInfo::instance().agentAmount, 1);
 	if (ImGui::Button("Apply")) {
-		win->setSIAgentNum();
+		win->setSIAgentSetting();
 	}
 
 }

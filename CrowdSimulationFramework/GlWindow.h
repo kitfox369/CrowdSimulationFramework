@@ -26,7 +26,7 @@ public:
 	
 	ShaderProgram* m_shaderProgram;
 
-	void setSIAgentNum();
+	void setSIAgentSetting();
 
 	void setSize(int width, int height);
 	void setAspect(float ratio);
@@ -52,10 +52,10 @@ private:
 
 	std::vector<SiAgent*> agent;
 	int agentNum;
-
+	int agentModelKindNum;
 
 	void setupBuffer();
-
+	void drawModel(glm::mat4& modelM, glm::mat4& view, glm::mat4& projection, glm::mat4& offset, glm::vec3 camPos, float animationTime, unsigned int st, unsigned int num, unsigned int shadow);
 };
 
 

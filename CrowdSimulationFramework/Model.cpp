@@ -6,6 +6,7 @@
 #include "Model.h"
 #include "texUtils.h"
 
+#include"stb_image.h"
 #include "meshoptimizer.h"
 #include  <glm/gtx/string_cast.hpp>
 
@@ -31,10 +32,10 @@ unsigned int TextureFromFile(const char* path, const string& directory, bool gam
 	glGenTextures(1, &textureID);
 
 	textureID = loadImage(filename.c_str());
-	/*
+	
 
-	int width, height, nrComponents;
-	unsigned char *data = loadImage(filename.c_str(), &width, &height, &nrComponents, 0);
+	/*int width, height, nrComponents;
+	unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
 	if (data)
 	{
 		GLenum format;
@@ -60,9 +61,9 @@ unsigned int TextureFromFile(const char* path, const string& directory, bool gam
 	{
 		std::cout << "Texture failed to load at path: " << path << std::endl;
 		stbi_image_free(data);
-	}
+	}*/
 
-	*/
+	
 
 	return textureID;
 }

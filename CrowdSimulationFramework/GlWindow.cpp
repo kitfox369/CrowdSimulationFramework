@@ -30,9 +30,10 @@
 		//setSIAgentNum();
 	}
 
-	void GlWindow::setSIAgentNum() {
+	void GlWindow::setSIAgentSetting() {
 		agent.clear();
 		agentNum = SystemInfo::instance().agentAmount;
+		agentModelKindNum= SystemInfo::instance().modelKindNum;
 		for (int i = 0; i < agentNum; i++) {
 			glm::vec2 initialPos(0.0f, i * 10.0f);
 			glm::vec2 goalPos(50.0f, i * 10.0f);
@@ -86,20 +87,27 @@
 		
 		m_grid->draw(model, viewMat, projection);
 
-		m_model.glRotate(90, 1, 0,0);
-		m_model.glScale(0.05f, 0.05f, 0.05f);
+		m_model.glRotate(180, 1, 0,0);
+		//m_model.glScale(0.05f, 0.05f, 0.05f);
 		model = m_model.getMatrix();
 		for (int i = 0; i < agent.size(); i++) {
 			agent[i]->doStep(_deltaTime);
 			offset = agent[i]->getPosition();
-			//m_cylinder->draw(model, viewMat, projection, offset, 0);
-			
+
+			drawModel(model, viewMat, projection, offset, cam.Position, animationTime, 0, 1, 1);
 		}
-		m_dircylinder->drawMesh(model, viewMat, projection, origin, cam.Position, animationTime, 0, 1, 1);
+		//m_dircylinder->drawMesh(model, viewMat, projection, origin, cam.Position, animationTime, 0, 1, 1);
 		//m_animatedModel->runComputeShader(m_width, m_height, viewMat, cam.Position);
 
 		//m_animatedModel->drawMesh(model, viewMat, projection, offset, cam.Position, animationTime, 0, 1, 1);
 		
 		
 		m_model.glPopMatrix();
+	}
+
+	void GlWindow::drawModel(glm::mat4& modelM, glm::mat4& view, glm::mat4& projection, glm::mat4& offset, glm::vec3 camPos, float animationTime, unsigned int st, unsigned int num, unsigned int shadow) {
+		if(agentModelKindNum==0)
+			m_cylinder->draw(modelM, view, projection, offset, 0);
+		else if(agentModelKindNum==1)
+			m_dircylinder->drawMesh(modelM, view, projection, offset, camPos, animationTime, 0, 1, 1);
 	}

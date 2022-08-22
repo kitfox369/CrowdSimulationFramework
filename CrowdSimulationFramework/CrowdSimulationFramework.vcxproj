@@ -153,6 +153,7 @@
     <ClCompile Include="imgui_user_rendering_interface.cpp" />
     <ClCompile Include="interval.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Model\AnimatedModel.cpp" />
     <ClCompile Include="Model\Cylinder.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="SiAgent.h" />
     <ClInclude Include="Simulator.h" />
     <ClInclude Include="stb_image.h" />
+    <ClInclude Include="stb_imgae.h" />
     <ClInclude Include="SystemInfo.h" />
     <ClInclude Include="texUtils.h" />
   </ItemGroup>
@@ -190,6 +192,8 @@
     <None Include="Shader\black.vert" />
     <None Include="Shader\diffuse.frag" />
     <None Include="Shader\diffuse.vert" />
+    <None Include="Shader\modelTexture.frag" />
+    <None Include="Shader\modelTexture.vert" />
     <None Include="Shader\Phong.frag" />
     <None Include="Shader\Phong.vert" />
     <None Include="Shader\model.frag" />

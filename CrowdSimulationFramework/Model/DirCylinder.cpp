@@ -19,7 +19,7 @@ void DirCylinder::setup() {
 
 	m_shaderProgram = new ShaderProgram();
 	//m_shaderProgram->initFromFiles("Shader/model.vert", "Shader/model.frag");
-	m_shaderProgram->initFromFiles("Shader/model.vert", "Shader/model.frag");
+	m_shaderProgram->initFromFiles("Shader/modelTexture.vert", "Shader/modelTexture.frag");
 
 	m_shaderProgram->addUniform("model");
 	m_shaderProgram->addUniform("view");
@@ -36,13 +36,15 @@ void DirCylinder::setup() {
 
 	m_shaderProgram->addUniform("location");
 
-	computeshader = loadComputeShader("Shader/update.comp");
+	m_shaderProgram->addUniform("texture_diffuse1");
+
+	//computeshader = loadComputeShader("Shader/update.comp");
 
 	lightPos = glm::vec3(10, 10, 10);
 
 }
 
-#define WORK_GROUP_SIZE 128
+/*#define WORK_GROUP_SIZE 128
 
 void DirCylinder::runComputeShader(int m_width, int m_height, glm::mat4& view, glm::vec3 camPos) {
 	glUseProgram(computeshader);
@@ -81,7 +83,7 @@ void DirCylinder::runComputeShader(int m_width, int m_height, glm::mat4& view, g
 
 
 	//	std::cout << glm::to_string(test) << test.x + test.y + test.z << std::endl;
-}
+}*/
 
 void DirCylinder::drawMesh(glm::mat4& modelM, glm::mat4& view, glm::mat4& projection, glm::mat4& offset, glm::vec3 camPos, float animationTime, unsigned int st, unsigned int num, unsigned int shadow) {
 
@@ -117,8 +119,7 @@ void DirCylinder::drawMesh(glm::mat4& modelM, glm::mat4& view, glm::mat4& projec
 
 	glUniformMatrix4fv(m_shaderProgram->uniform("location"), 1, GL_FALSE, glm::value_ptr(offset));
 
-	//glUniform1i(m_shaderProgram->uniform("hasTextureDiffuse"), 1);
-	//glUniform1i(m_shaderProgram->uniform("hasTextureSpecular"), 1);
+	glUniform1i(m_shaderProgram->uniform("texture_diffuse1"), 0);
 
 	m_meshModel->Draw(1);
 
