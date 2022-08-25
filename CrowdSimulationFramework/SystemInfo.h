@@ -21,6 +21,7 @@ public:
 
     int agentAmount;
     int modelKindNum;
+    int _deltaTime;
 
 private:
 

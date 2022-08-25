@@ -15,6 +15,7 @@
 
 		delete m_grid;
 		delete m_cylinder;
+		delete[] modelMatrices;
 	}
 
 	void GlWindow::setupBuffer()
@@ -27,6 +28,8 @@
 		m_animatedModel = new AnimatedModel(agentNum);
 
 		m_dircylinder = new DirCylinder(agentNum);
+
+		modelMatrices = new glm::mat4[agentNum];
 		//setSIAgentNum();
 	}
 
@@ -34,12 +37,28 @@
 		agent.clear();
 		agentNum = SystemInfo::instance().agentAmount;
 		agentModelKindNum= SystemInfo::instance().modelKindNum;
+		
 		for (int i = 0; i < agentNum; i++) {
 			glm::vec2 initialPos(0.0f, i * 10.0f);
 			glm::vec2 goalPos(50.0f, i * 10.0f);
 			agent.push_back(new SiAgent(0, initialPos));
 			agent[i]->addGoalPos(goalPos);
 		}
+
+		glm::mat4 offset;
+
+		int time = 100;
+
+		modelMatrices = new glm::mat4[agentNum*time];
+
+		for (int i = 0; i < agent.size(); i++) {
+			//agent[i]->doStep(SystemInfo::instance()._deltaTime);
+			offset = agent[i]->getPosition();
+
+			//대량 모델 매트릭스
+			modelMatrices[i] = offset;
+		}
+
 	}
 
 
@@ -81,7 +100,7 @@
 		m_model.glPushMatrix();
 		model = m_model.getMatrix();
 		//rect->draw(model, viewMat, projection);
-		glm::mat4 offset;
+
 
 		glm::mat4 origin = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f,0.0f, 0.0f));
 		
@@ -90,11 +109,9 @@
 		m_model.glRotate(180, 1, 0,0);
 		//m_model.glScale(0.05f, 0.05f, 0.05f);
 		model = m_model.getMatrix();
-		for (int i = 0; i < agent.size(); i++) {
-			agent[i]->doStep(_deltaTime);
-			offset = agent[i]->getPosition();
 
-			drawModel(model, viewMat, projection, offset, cam.Position, animationTime, 0, 1, 1);
+		for (int i = 0; i < agent.size(); i++) {
+			drawModel(model, viewMat, projection, modelMatrices, cam.Position, animationTime, i, agentNum, 1);
 		}
 		//m_dircylinder->drawMesh(model, viewMat, projection, origin, cam.Position, animationTime, 0, 1, 1);
 		//m_animatedModel->runComputeShader(m_width, m_height, viewMat, cam.Position);
@@ -105,9 +122,9 @@
 		m_model.glPopMatrix();
 	}
 
-	void GlWindow::drawModel(glm::mat4& modelM, glm::mat4& view, glm::mat4& projection, glm::mat4& offset, glm::vec3 camPos, float animationTime, unsigned int st, unsigned int num, unsigned int shadow) {
+	void GlWindow::drawModel(glm::mat4& modelM, glm::mat4& view, glm::mat4& projection, glm::mat4* offset, glm::vec3 camPos, float animationTime, unsigned int idx, unsigned int num, unsigned int shadow) {
 		if(agentModelKindNum==0)
-			m_cylinder->draw(modelM, view, projection, offset, 0);
+			m_cylinder->draw(modelM, view, projection, offset, 0,num,idx);
 		else if(agentModelKindNum==1)
-			m_dircylinder->drawMesh(modelM, view, projection, offset, camPos, animationTime, 0, 1, 1);
+			m_dircylinder->drawMesh(modelM, view, projection, offset, camPos, animationTime, idx, num, 1);
 	}

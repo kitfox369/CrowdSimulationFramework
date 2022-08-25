@@ -615,6 +615,7 @@ int main(void)
 	{
 
 		_delta_time = glfwGetTime() - _frame_start_time;
+		SystemInfo::instance()._deltaTime = _delta_time;
 		_frame_start_time = glfwGetTime();
 		animationTime = _frame_start_time - startFrame;
 

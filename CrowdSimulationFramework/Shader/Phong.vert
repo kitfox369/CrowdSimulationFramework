@@ -1,8 +1,12 @@
-#version 400
+#version 450
 
 in vec3 coord3d;
 in vec3 v_normal;
 
+layout(std430, binding = 0) buffer ssbo1  //for specifying joints : full
+ {
+	mat4 aInstanceMatrix[];
+ };
 
 out vec3 f_color;
 
@@ -29,7 +33,9 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
-uniform mat4 location;
+uniform uint numChar;
+
+//uniform mat4 location;
 
 void main()
 {
@@ -49,6 +55,7 @@ void main()
 
 	f_color = ambient + diffuse + spec;
 
-	gl_Position = projection* view *location* model * vec4(coord3d,1.0);
+	gl_Position = projection*view*aInstanceMatrix[gl_InstanceID+numChar] *model* vec4(coord3d, 1.0f);
+	//gl_Position = projection* view *location* model * vec4(coord3d,1.0);
 	
 }

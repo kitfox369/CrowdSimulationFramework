@@ -11,5 +11,5 @@ uniform sampler2D texture_diffuse1;
 
 void main()
 {
-	 FragColor = mix(texture(texture_diffuse1,TexCoord),vec4(color,1.0),0.2);
+	 FragColor = mix(texture(texture_diffuse1,TexCoord),vec4(color,1.0),0.1);
 }

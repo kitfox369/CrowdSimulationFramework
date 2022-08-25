@@ -34,7 +34,7 @@ void AnimatedModel::setup() {
 
 	m_shaderProgram->addUniform("location");
 
-	m_shaderProgram->addUniform("numChar");
+	//m_shaderProgram->addUniform("numChar");
 
 	//m_shaderProgram->addUniform("hasTextureDiffuse");
 	//m_shaderProgram->addUniform("hasTextureSpecular");
@@ -232,7 +232,7 @@ void AnimatedModel::drawMesh(glm::mat4& modelM, glm::mat4& view, glm::mat4& proj
 
 	unsigned int numChar = test.x + test.y;
 
-	glUniform1uiv(m_shaderProgram->uniform("numChar"), 1, &numChar);
+	//glUniform1uiv(m_shaderProgram->uniform("numChar"), 1, &numChar);
 
 	//ssbo
 	glGenBuffers(1, &ssboHandle_t);  //transformation

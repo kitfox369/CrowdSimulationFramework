@@ -34,7 +34,7 @@ uniform MaterialInfo Material;
 
 uniform mat4 location;
 
-uniform uint numChar;
+//uniform uint numChar;
 
 vec3 ads(vec4 position, vec3 norm)
 {
@@ -67,7 +67,7 @@ void main() {
 
    //TexCoord = aTexCoords;
    //gl_Position = projection*view*location*model * vec4(aPos, 1.0f);
-   //gl_Position = projection*view*aInstanceMatrix[gl_InstanceID] * vec4(aPos, 1.0f);
-   gl_Position = projection*view*location*model* vec4(aPos, 1.0f);
+   gl_Position = projection*view*aInstanceMatrix[gl_InstanceID] *model* vec4(aPos, 1.0f);
+   //gl_Position = projection*view*location*model* vec4(aPos, 1.0f);
 
 }

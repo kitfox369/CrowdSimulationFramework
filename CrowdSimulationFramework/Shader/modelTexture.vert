@@ -8,10 +8,10 @@ layout(location = 2) in vec2 aTexCoords;
 //layout(location = 3) in ivec4 BoneIDs;
 //layout(location = 4) in vec4 Weights;
 
-//layout(std430, binding = 0) buffer ssbo1  //for specifying joints : full
-// {
-//	mat4 aInstanceMatrix[];
-// };
+layout(std430, binding = 0) buffer ssbo1  //for specifying joints : full
+ {
+	mat4 aInstanceMatrix[];
+ };
 
 out vec2 TexCoord;
 out vec3 color;
@@ -34,7 +34,7 @@ uniform MaterialInfo Material;
 
 uniform mat4 location;
 
-//uniform uint numChar;
+uniform uint numChar;
 
 vec3 ads(vec4 position, vec3 norm)
 {
@@ -60,7 +60,7 @@ void main() {
 
    TexCoord = vec2(1-aTexCoords.x,1-aTexCoords.y);
    //gl_Position = projection*view*location*model * vec4(aPos, 1.0f);
-   //gl_Position = projection*view*aInstanceMatrix[gl_InstanceID] * vec4(aPos, 1.0f);
-   gl_Position = projection*view*location*model* vec4(aPos, 1.0f);
+   gl_Position = projection*view*aInstanceMatrix[gl_InstanceID+numChar] *model* vec4(aPos, 1.0f);
+   //gl_Position = projection*view*location*model* vec4(aPos, 1.0f);
 
 }

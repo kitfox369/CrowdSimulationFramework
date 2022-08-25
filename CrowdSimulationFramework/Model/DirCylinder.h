@@ -62,7 +62,7 @@ public:
 	std::string readFile(const char* fileName);
 	GLuint loadComputeShader(const char* computeShaderFile);
 	void runComputeShader(int m_width, int m_height, glm::mat4& view, glm::vec3 camPos);
-	void drawMesh(glm::mat4& model, glm::mat4& view, glm::mat4& projection, glm::mat4& offset, glm::vec3 camPos, float animationTime, unsigned int st, unsigned int num, unsigned int shadow);
+	void drawMesh(glm::mat4& model, glm::mat4& view, glm::mat4& projection, glm::mat4* offset, glm::vec3 camPos, float animationTime, unsigned int idx, unsigned int num, unsigned int shadow);
 };
 
 #endif

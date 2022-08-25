@@ -54,8 +54,10 @@ private:
 	int agentNum;
 	int agentModelKindNum;
 
+	glm::mat4* modelMatrices;
+
 	void setupBuffer();
-	void drawModel(glm::mat4& modelM, glm::mat4& view, glm::mat4& projection, glm::mat4& offset, glm::vec3 camPos, float animationTime, unsigned int st, unsigned int num, unsigned int shadow);
+	void drawModel(glm::mat4& modelM, glm::mat4& view, glm::mat4& projection, glm::mat4* offset, glm::vec3 camPos, float animationTime, unsigned int idx, unsigned int num, unsigned int shadow);
 };
 
 

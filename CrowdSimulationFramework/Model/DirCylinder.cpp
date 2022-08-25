@@ -36,6 +36,8 @@ void DirCylinder::setup() {
 
 	m_shaderProgram->addUniform("location");
 
+	m_shaderProgram->addUniform("numChar");
+
 	m_shaderProgram->addUniform("texture_diffuse1");
 
 	//computeshader = loadComputeShader("Shader/update.comp");
@@ -85,7 +87,7 @@ void DirCylinder::runComputeShader(int m_width, int m_height, glm::mat4& view, g
 	//	std::cout << glm::to_string(test) << test.x + test.y + test.z << std::endl;
 }*/
 
-void DirCylinder::drawMesh(glm::mat4& modelM, glm::mat4& view, glm::mat4& projection, glm::mat4& offset, glm::vec3 camPos, float animationTime, unsigned int st, unsigned int num, unsigned int shadow) {
+void DirCylinder::drawMesh(glm::mat4& modelM, glm::mat4& view, glm::mat4& projection, glm::mat4* offset, glm::vec3 camPos, float animationTime, unsigned int idx, unsigned int num, unsigned int shadow) {
 
 
 	glm::vec3 LightIntensity(1, 1, 1);
@@ -117,9 +119,17 @@ void DirCylinder::drawMesh(glm::mat4& modelM, glm::mat4& view, glm::mat4& projec
 	glUniform3fv(m_shaderProgram->uniform("Material.Ks"), 1, glm::value_ptr(Ks));
 	glUniform1fv(m_shaderProgram->uniform("Material.Shiness"), 1, &shiness);
 
-	glUniformMatrix4fv(m_shaderProgram->uniform("location"), 1, GL_FALSE, glm::value_ptr(offset));
+	//glUniformMatrix4fv(m_shaderProgram->uniform("location"), 1, GL_FALSE, glm::value_ptr(offset));
+
+	glUniform1ui(m_shaderProgram->uniform("numChar"), idx);
 
 	glUniform1i(m_shaderProgram->uniform("texture_diffuse1"), 0);
+
+	glGenBuffers(1, &ssboHandle_t);  //transformation
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssboHandle_t);
+	glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(glm::mat4) * num, offset, GL_STATIC_DRAW);
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, ssboHandle_t);
+	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 
 	m_meshModel->Draw(1);
 
